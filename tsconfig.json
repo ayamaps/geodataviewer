@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "commonjs",
+    "lib": ["ES2022", "DOM"],
+    "outDir": "out",
+    "rootDir": "src",
+    "strict": true,
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "types": ["node", "vscode"],
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": [
+    "node_modules",
+    "geo-data-viewer",
+    ".vscode-test",
+    "src/webview/app.ts",
+    "src/webview/bridge.ts",
+    "src/webview/dataFlow.ts",
+    "src/webview/keplerApp.ts",
+  ],
+}

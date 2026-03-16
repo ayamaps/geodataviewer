@@ -1,0 +1,178 @@
+{
+  "name": "geo-data-viewer-fast",
+  "displayName": "Geo Data Viewer Fast",
+  "description": "Fast geospatial file preview in VS Code with loaders.gl parsing and kepler.gl rendering.",
+  "version": "0.2.0",
+  "private": true,
+  "publisher": "Ayamap",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/beyoung/geodataviewer.git"
+  },
+  "engines": {
+    "vscode": "^1.86.0"
+  },
+  "categories": [
+    "Visualization",
+    "Data Science",
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:geoDataViewer.openCurrentFile",
+    "onCommand:geoDataViewer.previewOnMap",
+    "onCommand:geoDataViewer.reloadMap",
+    "onCommand:geoDataViewer.openFromUrl",
+    "onCommand:geoDataViewer.mapGallery",
+    "onCommand:map.view",
+    "onCommand:map.view.url",
+    "onCommand:map.gallery",
+    "onWebviewPanel:geoDataViewer.mapPreview"
+  ],
+  "main": "./out/extension/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "geoDataViewer.openCurrentFile",
+        "title": "Geo Data Viewer: Open Current File",
+        "category": "Geo Data Viewer"
+      },
+      {
+        "command": "geoDataViewer.previewOnMap",
+        "title": "Open in Geo Data Viewer",
+        "category": "Geo Data Viewer",
+        "icon": {
+          "light": "./resources/map.svg",
+          "dark": "./resources/map.svg"
+        }
+      },
+      {
+        "command": "geoDataViewer.reloadMap",
+        "title": "Geo Data Viewer: Reload Map",
+        "category": "Geo Data Viewer"
+      },
+      {
+        "command": "geoDataViewer.openFromUrl",
+        "title": "Geo Data Viewer: Open from URL or Path",
+        "category": "Geo Data Viewer"
+      },
+      {
+        "command": "geoDataViewer.mapGallery",
+        "title": "Geo Data Viewer: Map Gallery",
+        "category": "Geo Data Viewer"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "geoDataViewer.previewOnMap",
+        "key": "ctrl+alt+m"
+      },
+      {
+        "command": "geoDataViewer.openFromUrl",
+        "key": "ctrl+alt+u"
+      },
+      {
+        "command": "geoDataViewer.mapGallery",
+        "key": "ctrl+alt+g"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "geoDataViewer.previewOnMap",
+          "when": "resourceFilename =~ /.*\\.(geojson|json|config|topojson|gml|kml|gpx|igc|wkt|csv|tsv|xlsx|fgb|parquet|geoparquet|gpq|shp|zip|pmtiles)$/",
+          "group": "navigation"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "geoDataViewer.previewOnMap",
+          "when": "resourceFilename =~ /.*\\.(geojson|json|config|topojson|gml|kml|gpx|igc|wkt|csv|tsv|xlsx|fgb|parquet|geoparquet|gpq|shp|zip|pmtiles)$/",
+          "group": "navigation"
+        },
+        {
+          "command": "geoDataViewer.mapGallery",
+          "group": "navigation@10"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Geo Data Viewer Fast",
+      "properties": {
+        "geoDataViewer.mapStyle": {
+          "type": "string",
+          "enum": [
+            "positron",
+            "darkmatter"
+          ],
+          "default": "positron",
+          "description": "Default basemap style used in the webview."
+        },
+        "geoDataViewer.largeFilePreviewLimit": {
+          "type": "number",
+          "default": 5000,
+          "minimum": 500,
+          "description": "Maximum records/features loaded for large-file preview mode."
+        },
+        "geoDataViewer.enableParseCache": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable in-memory parse cache for unchanged files."
+        },
+        "geoDataViewer.showCacheDiagnostics": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show cache hit/miss and timing diagnostics in preview panel."
+        },
+        "geoDataViewer.enablePerformanceLog": {
+          "type": "boolean",
+          "default": false,
+          "description": "Emit parse performance logs to 'Geo Data Viewer Perf' output channel."
+        },
+        "geoDataViewer.mapboxToken": {
+          "type": "string",
+          "default": "",
+          "description": "Mapbox access token used by kepler.gl basemaps."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "npm run compile && npm run bundle:extension && npm run bundle:webview",
+    "bundle:webview": "node ./scripts/build-webview.mjs",
+    "compile": "tsc -p .",
+    "bundle:extension": "node ./scripts/build-extension-bundle.mjs",
+    "typecheck": "tsc -p . --noEmit",
+    "test": "npm run compile && node --test test/*.test.js",
+    "package:vsix": "./scripts/package-vsix.sh",
+    "watch": "tsc -p . -w",
+    "vscode:prepublish": "npm run compile"
+  },
+  "dependencies": {
+    "@loaders.gl/core": "^4.3.0",
+    "@loaders.gl/csv": "^4.3.0",
+    "@loaders.gl/flatgeobuf": "^4.3.0",
+    "@loaders.gl/kml": "^4.3.0",
+    "@loaders.gl/parquet": "^4.3.0",
+    "@loaders.gl/shapefile": "^4.3.0",
+    "assert": "^2.1.0",
+    "kepler.gl": "3.2.6",
+    "pmtiles": "^4.3.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-redux": "8.1.2",
+    "redux": "4.2.1",
+    "styled-components": "6.1.8",
+    "topojson-client": "^3.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.30",
+    "@types/react": "^18.3.28",
+    "@types/react-dom": "^18.3.7",
+    "@types/topojson-client": "^3.1.4",
+    "@types/vscode": "^1.86.0",
+    "@vscode/vsce": "^3.7.1",
+    "esbuild": "^0.27.4",
+    "typescript": "^5.4.5"
+  }
+}
